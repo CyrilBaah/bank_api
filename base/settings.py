@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     "djoser",
     "phonenumber_field",
     "cloudinary",
-    "djcelery",
     "django_celery_beat",
 ]
 
@@ -259,6 +258,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+SITE_ID = 1
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -280,3 +280,11 @@ SPECTACULAR_SETTINGS = {
     "COMPONENT_SPLIT_REQUEST": True,
     "SCHEMA_PATH_PREFIX": "/api/",
 }
+
+EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
+EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.example.com")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "webmaster@localhost")
+DOMAIN = os.getenv("DOMAIN", "localhost")
+
+MAX_UPDALOAD_SIZE = 2 * 1024 * 1024  # 2 MB
