@@ -1,0 +1,17 @@
+Django==5.1.4
+djangorestframework==3.16.1
+django-countries==7.6.1
+drf-spectacular==0.27.2
+django-filter==24.3
+djoser==2.2.3
+django-phonenumber-field==8.0.0
+cloudinary==1.44.1
+django-celery-beat==2.7.0
+gunicorn==23.0.0
+psycopg2-binary==2.9.9
+python-dotenv==1.0.0
+celery==5.4.0
+redis==5.2.0
+Pillow==11.2.1
+loguru==0.7.2
+whitenoise==6.8.2
