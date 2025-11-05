@@ -14,6 +14,7 @@ import os
 from datetime import timedelta
 from loguru import logger
 from pathlib import Path
+from time import timedelta
 
 from dotenv import load_dotenv
 
@@ -128,7 +129,7 @@ ROOT_URLCONF = "base.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -291,6 +292,7 @@ EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.example.com")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "webmaster@localhost")
 DOMAIN = os.getenv("DOMAIN", "localhost")
+SITE_NAME = os.getenv("SITE_NAME", "Bank API")
 
 MAX_UPDALOAD_SIZE = 2 * 1024 * 1024  # 2 MB
 
@@ -333,3 +335,8 @@ LOGGING = {
         "level": "DEBUG",
     },
 }
+
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", ["http://localhost:8000"]).split(",")
+LOCKOUT_DURATION = timedelta(minutes=int(os.getenv("LOCKOUT_DURATION", 1)))  # in minutes
+LOGIN_ATTEMPTS = int(os.getenv("LOGIN_ATTEMPTS", 3))  # number of attempts
+OTP_EXPIRATION = timedelta(minutes=int(os.getenv("OTP_EXPIRATION_MINUTES", 1)))  # OTP expiration time
