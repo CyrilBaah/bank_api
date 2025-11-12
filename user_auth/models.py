@@ -60,3 +60,58 @@ class User(AbstractUser):
                 self.save(update_fields=['otp', 'otp_expiry_time'])
                 return True
             return False
+
+        def handle_failed_login_attempts(self):
+            """Handle failed login attempts and lock account if necessary."""
+            self.failed_login_attempts += 1
+            self.last_failed_login = timezone.now()
+            if self.failed_login_attempts >= settings.LOGIN_ATTEMPTS:
+                self.account_status = self.AccountStatus.LOCKED
+                send_account_locked_email(self.email)
+            self.save()
+
+        def reset_failed_login_attempts(self):
+            """Reset failed login attempts counter."""
+            self.failed_login_attempts = 0
+            self.last_failed_login = None
+            self.account_login_status = self.AccountStatus.ACTIVE
+            self.save()
+
+        def unlock_account(self):
+            """Unlock the user account."""
+            self.account_status = self.AccountStatus.LOCKED
+            self.account_status = self.AccountStatus.ACTIVE
+            self.failed_login_attempts = 0
+            self.last_failed_login = None
+            self.save()
+
+        @property
+        def is_locked_out(self) -> bool:
+            """Check if the user account is locked."""
+            if self.account_status == self.AccountStatus.LOCKED:
+                if (self.last_failed_login and
+                    timezone.now() - self.last_failed_login > timezone.timedelta(minutes=settings.LOCKOUT_DURATION)):
+                    self.unlock_account()
+                    return False
+                return True
+            return False
+
+
+        @property
+        def full_name(self) -> str:
+            """Return the user's full name."""
+            if self.middle_name:
+                return f"{self.first_name} {self.middle_name} {self.last_name}"
+            return f"{self.first_name} {self.last_name}".title().strip()
+
+        class Meta:
+            verbose_name = _("User")
+            verbose_name_plural = _("Users")
+            ordering = ["-date_joined"]
+
+        def has_role(self, role: str) -> bool:
+            """Check if the user has a specific role."""
+            return self.role == role and hasattr(self, 'role')
+
+        def __str__(self) -> str:
+            return f"{self.full_name} ({self.get_role_display()})"
