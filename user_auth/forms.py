@@ -1,9 +1,9 @@
 from django.contrib.auth.forms import UserCreationForm as DjangoUserCreationForm
 from django.core.exceptions import ValidationError
-from django import ValidatorError
-django.utils.translation import gettext as _
+from django import forms
+from django.utils.translation import gettext as _
 
-.models import User
+from .models import User
 
 class UserCreationForm(DjangoUserCreationForm):
     class Meta:

@@ -14,7 +14,7 @@ import os
 from datetime import timedelta
 from loguru import logger
 from pathlib import Path
-from time import timedelta
+
 
 from dotenv import load_dotenv
 
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "base",  # Added to enable custom management commands
+    "user_auth",
     "rest_framework",
     "django_countries",
     "drf_spectacular",
@@ -65,7 +66,6 @@ PASSWORD_HASHERS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -280,12 +280,16 @@ AUTH_USER_MODEL = "user_auth.User"
 
 # Spectacular settings for API documentation
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Bank API",
+    "TITLE": "OpenFinance Bank API",
     "DESCRIPTION": "A comprehensive API for banking operations",
     "VERSION": "0.1.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "COMPONENT_SPLIT_REQUEST": True,
     "SCHEMA_PATH_PREFIX": "/api/",
+    "LICENSE": {
+        "name": "MIT License",
+        "url": "https://opensource.org/license/mit/",
+    },
 }
 
 EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
@@ -337,7 +341,7 @@ LOGGING = {
     },
 }
 
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", ["http://localhost:8000"]).split(",")
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost:8000").split(",")
 LOCKOUT_DURATION = timedelta(minutes=int(os.getenv("LOCKOUT_DURATION", 1)))  # in minutes
 LOGIN_ATTEMPTS = int(os.getenv("LOGIN_ATTEMPTS", 3))  # number of attempts
 OTP_EXPIRATION = timedelta(minutes=int(os.getenv("OTP_EXPIRATION_MINUTES", 1)))  # OTP expiration time

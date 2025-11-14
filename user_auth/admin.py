@@ -11,8 +11,8 @@ class Admin(UserAdmin):
     form = UserChangeForm
     model = User
     list_display = (
-        "username",
         "email",
+        "username",
         "first_name",
         "last_name",
         "id_no",
@@ -32,7 +32,7 @@ class Admin(UserAdmin):
        (
            _("Personal Information"),
            {
-               "fields": ("first_name", "last_name", "id_no", "account_status", "role"),
+               "fields": ("first_name", "last_name", "id_no", "role"),
            },
        ),
        (
