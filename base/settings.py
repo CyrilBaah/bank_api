@@ -75,6 +75,7 @@ MIDDLEWARE = [
     # Simple in-memory rate limiting middleware. Uses LocMemCache and is intended
     # for development / small deployments. See base/middleware.py for details.
     "base.middleware.SimpleRateLimitMiddleware",
+    "user_auth.middleware.CustomerHeaderMiddleware",
 ]
 
 REST_FRAMEWORK = {
