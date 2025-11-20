@@ -11,9 +11,14 @@ RUN mkdir -p ${PROJECT}
 RUN mkdir -p ${PROJECT}/static
 WORKDIR ${PROJECT}
 
-# Packages required for setting up WSGI
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends gcc libc-dev python3-dev
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libc-dev \
+    python3-dev \
+    libpq-dev \
+    netcat-traditional \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy and install requirements
 RUN pip install --upgrade pip

@@ -17,6 +17,9 @@ services:
       - ./.env
     depends_on:
       - db
+      - redis
+      - mailpit
+      - rabbitmq
 
   db:
     container_name: bank-db
@@ -51,6 +54,73 @@ services:
     networks:
       - app-network
 
+  redis:
+    image: "redis:alpine"
+    container_name: bank-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    container_name: bank-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_logs:/var/log/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    networks:
+      - app-network
+  
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bank-celery-worker
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - .:/app:rw
+      - static_volume:/home/app/static
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    networks:
+      - app-network
+    entrypoint: ["sh", "/home/app/celery-entrypoint.sh"]
+
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bank-flower
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "5555:5555"
+    volumes:
+      - .:/app:rw
+      - static_volume:/home/app/static
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    networks:
+      - app-network
+    entrypoint: ["sh", "-c", "celery -A base flower --address=0.0.0.0 --port=5555"]
+
 # Docker Networks
 networks:
   app-network:
@@ -60,3 +130,6 @@ networks:
 volumes:
   static_volume:
   pgdata:
+  rabbitmq_data:
+  rabbitmq_logs:
+  

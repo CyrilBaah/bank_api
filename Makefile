@@ -43,6 +43,9 @@ createsuperuser: ## Create Django superuser
 test: ## Run tests
 	docker-compose exec app python manage.py test
 
+test-services: ## Test all services connectivity
+	python test_services.py
+
 dev: build up migrate collectstatic ## Full development setup
 
 clean: ## Remove containers and volumes
