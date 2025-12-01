@@ -12,13 +12,13 @@ def send_otp_email(email, otp):
     from_email = settings.DEFAULT_FROM_EMAIL
     recipient_list = [email]
     context = {
-        'otp': otp,
-        'user': {'first_name': 'User'},
-        'site_name': settings.SITE_NAME,
-        'expiry_time': settings.OTP_EXPIRATION,
-        'support_email': settings.SUPPORT_EMAIL,
+        "otp": otp,
+        "user": {"first_name": "User"},
+        "site_name": settings.SITE_NAME,
+        "expiry_time": settings.OTP_EXPIRATION,
+        "support_email": settings.SUPPORT_EMAIL,
     }
-    html_content = render_to_string('emails/otp_email.html', context)
+    html_content = render_to_string("emails/otp_email.html", context)
     text_content = strip_tags(html_content)
 
     email = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
@@ -37,12 +37,12 @@ def send_account_lock_email(self):
     from_email = settings.DEFAULT_FROM_EMAIL
     recipient_list = [email]
     context = {
-        'user': self,
-        'site_name': settings.SITE_NAME,
-        'lockout_duration': int(settings.LOCKOUT_DURATION.total_seconds() // 60),
-        'support_email': settings.SUPPORT_EMAIL,
+        "user": self,
+        "site_name": settings.SITE_NAME,
+        "lockout_duration": int(settings.LOCKOUT_DURATION.total_seconds() // 60),
+        "support_email": settings.SUPPORT_EMAIL,
     }
-    html_content = render_to_string('emails/account_locked.html', context)
+    html_content = render_to_string("emails/account_locked.html", context)
     text_content = strip_tags(html_content)
 
     email = EmailMultiAlternatives(subject, text_content, from_email, [email])

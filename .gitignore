@@ -9,6 +9,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+user_auth/migrations/
 
 # Django
 *.log

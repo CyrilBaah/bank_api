@@ -12,11 +12,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from datetime import timedelta
-from loguru import logger
 from pathlib import Path
 
-
 from dotenv import load_dotenv
+from loguru import logger
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -360,7 +359,13 @@ LOGGING = {
     },
 }
 
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost:8000").split(",")
-LOCKOUT_DURATION = timedelta(minutes=int(os.getenv("LOCKOUT_DURATION", 1)))  # in minutes
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost:8000").split(
+    ","
+)
+LOCKOUT_DURATION = timedelta(
+    minutes=int(os.getenv("LOCKOUT_DURATION", 1))
+)  # in minutes
 LOGIN_ATTEMPTS = int(os.getenv("LOGIN_ATTEMPTS", 3))  # number of attempts
-OTP_EXPIRATION = timedelta(minutes=int(os.getenv("OTP_EXPIRATION_MINUTES", 1)))  # OTP expiration time
+OTP_EXPIRATION = timedelta(
+    minutes=int(os.getenv("OTP_EXPIRATION_MINUTES", 1))
+)  # OTP expiration time
